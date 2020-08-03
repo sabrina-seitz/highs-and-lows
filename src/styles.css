@@ -1,0 +1,233 @@
+body {
+  background: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.container {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 0;
+  min-width: 360px;
+}
+
+.app {
+  padding: 20px;
+  color: #fff;
+  background: #28385e;
+  border-radius: 10px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: 5px;
+}
+@media (min-width: 576px) {
+  .app {
+    padding: 50px;
+    margin: 50px 25px 0 0;
+  }
+}
+
+.head .now-icon {
+  font-size: 2.8rem;
+  float: left;
+}
+
+.head .today-temp {
+  font-size: 1.4rem;
+  font-weight: 500;
+  float: right;
+}
+
+.temp {
+  clear: both;
+  margin-top: 88px;
+}
+
+@media (min-width: 576px) {
+  .temp {
+    margin-top: 115px;
+  }
+}
+
+.temp h1 {
+  font-size: 6.8rem;
+  font-weight: 550;
+  display: inline;
+}
+
+.temp .temp-units {
+  display: inline;
+  position: relative;
+  bottom: 60px;
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.temp-unit-links {
+  color: #fff;
+  text-decoration: none;
+  transition: all 150ms ease-in-out;
+}
+
+.temp-unit-links:hover {
+  text-decoration: none;
+  font-weight: 600;
+  color: #fff;
+}
+
+.temp-unit-links:active {
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.city-date {
+  margin: 0px auto -8px auto;
+}
+
+@media (min-width: 576px) {
+  .city-date {
+    margin: 14px auto -8px auto;
+  }
+}
+
+.city-date .date-time {
+  font-size: 1.1rem;
+  margin-bottom: 21px;
+}
+
+.city-date h2 {
+  text-transform: uppercase;
+  font-size: 3rem;
+  font-weight: 600;
+  font-family: "Montserrat Subrayada", sans-serif;
+  margin-bottom: 0;
+}
+
+form {
+  margin-bottom: 60px;
+}
+
+@media (min-width: 576px) {
+  form {
+    margin-bottom: 80px;
+  }
+}
+
+.form-button {
+  cursor: pointer;
+  background-color: #fff;
+  outline: #fff;
+}
+
+.search-location {
+  color: #fff;
+  font-size: 2.2rem;
+  cursor: pointer;
+  position: relative;
+  bottom: 1.9px;
+}
+
+.search-location:hover {
+  color: #dddddd;
+}
+
+.forecast {
+  margin: 0;
+}
+
+.forecast-day {
+  font-size: 1rem;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+@media (min-width: 576px) {
+  .forecast-day {
+    font-weight: 300;
+    font-size: 1.1rem;
+  }
+}
+.forecast-icon {
+  font-size: 2rem;
+  line-height: 4.8rem;
+}
+
+@media (min-width: 576px) {
+  .forecast-icon {
+    font-size: 2.5rem;
+    line-height: 5.5rem;
+  }
+}
+
+.forecast-temp {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+@media (min-width: 576px) {
+  .forecast-temp {
+    font-size: 1.04rem;
+    font-weight: 400;
+  }
+}
+
+.player {
+  color: #28385e;
+  background: #dddddd;
+  padding: 20px;
+  border-radius: 40px 10px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  margin: 5px;
+}
+
+@media (min-width: 576px) {
+  .player {
+    padding: 25px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+    margin: 0;
+  }
+}
+
+/* iframe.spotify {
+  width: 215px;
+} */
+
+/* @media (min-width: 800px) {
+  iframe.spotify {
+    width: 300px;
+  }
+} */
+
+.player h3 {
+  font-family: "Montserrat Subrayada", sans-serif;
+  font-size: 1.9rem;
+}
+
+.player .text-player {
+  margin-bottom: 15px;
+}
+
+footer {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  color: #28385e;
+}
+
+@media (min-width: 576px) {
+  footer {
+    margin-top: 20px;
+  }
+}
+
+footer .link-footer {
+  color: #28385e;
+  text-decoration: underline;
+  transition: all 150ms ease-in-out;
+}
+
+footer .link-footer:hover {
+  color: #516c8d;
+  text-decoration: none;
+}
