@@ -71,7 +71,7 @@ body {
   font-weight: 400;
 }
 
-.temp-unit-links {
+/* .temp-unit-links {
   color: #fff;
   text-decoration: none;
   transition: all 150ms ease-in-out;
@@ -86,6 +86,23 @@ body {
 .temp-unit-links:active {
   text-decoration: none;
   font-weight: 600;
+} */
+
+.temp .temp-units .active {
+  font-weight: 600;
+  text-decoration: none;
+  color: #fff;
+  cursor: default;
+}
+
+.temp .temp-units .active:hover {
+  text-decoration: none;
+}
+
+.temp .temp-units .inactive {
+  text-decoration: none;
+  font-weight: 300;
+  color: #fff;
 }
 
 .city-date {

@@ -37,8 +37,10 @@ function updateNowIcon(code) {
 function showTemperature(response) {
   document.querySelector("#city").innerHTML = response.data.name;
 
+  celsiusTemperature = response.data.main.temp;
+
   document.querySelector("#current-temp").innerHTML = Math.round(
-    response.data.main.temp
+    celsiusTemperature
   );
 
   let tempTodayMin = Math.round(response.data.main.temp_min);
@@ -55,12 +57,27 @@ function showTemperature(response) {
 
 // Function: Celsius & Fahrenheit
 
-function convertToCelsius(event) {
-  document.querySelector("#current-temp").innerHTML = 23;
+function convertToFahrenheit(event) {
+  event.preventDefault();
+  celsiusLink.classList.remove("active");
+  celsiusLink.classList.add("inactive");
+  fahrenheitLink.classList.add("active");
+  fahrenheitLink.classList.remove("inactive");
+  let fahrenheitTemperature = (celsiusTemperature * 9) / 5 + 32;
+  document.querySelector("#current-temp").innerHTML = Math.round(
+    fahrenheitTemperature
+  );
 }
 
-function convertToFahrenheit(event) {
-  document.querySelector("#current-temp").innerHTML = 73;
+function convertToCelsius(event) {
+  event.preventDefault();
+  celsiusLink.classList.add("active");
+  celsiusLink.classList.remove("inactive");
+  fahrenheitLink.classList.remove("active");
+  fahrenheitLink.classList.add("inactive");
+  document.querySelector("#current-temp").innerHTML = Math.round(
+    celsiusTemperature
+  );
 }
 
 // Function: Search city
@@ -141,11 +158,13 @@ document.querySelector("#date-time").innerHTML = formatDate(now);
 
 // Celsius & Fahrenheit
 
-let celsiusLink = document.querySelector("#celsius");
-celsiusLink.addEventListener("click", convertToCelsius);
+let celsiusTemperature = null;
 
 let fahrenheitLink = document.querySelector("#fahrenheit");
 fahrenheitLink.addEventListener("click", convertToFahrenheit);
+
+let celsiusLink = document.querySelector("#celsius");
+celsiusLink.addEventListener("click", convertToCelsius);
 
 // Search
 
