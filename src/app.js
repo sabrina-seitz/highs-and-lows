@@ -1,4 +1,38 @@
-// Show Temp
+//Function: Update Icon (current weather)
+function updateNowIcon(code) {
+  let nowIconElement = document.querySelector("#now-icon");
+
+  if (code === "01d") {
+    nowIconElement.setAttribute("class", "fas fa-sun");
+  } else if (code === "01n") {
+    nowIconElement.setAttribute("class", "fas fa-moon");
+  } else if (code === "02d") {
+    nowIconElement.setAttribute("class", "fas fa-cloud-sun");
+  } else if (code === "02n") {
+    nowIconElement.setAttribute("class", "fas fa-cloud-moon");
+  } else if (
+    code === "03d" ||
+    code === "03n" ||
+    code === "04d" ||
+    code === "04n"
+  ) {
+    nowIconElement.setAttribute("class", "fas fa-cloud");
+  } else if (code === "09d" || code === "09n") {
+    nowIconElement.setAttribute("class", "fas fa-cloud-showers-heavy");
+  } else if (code === "10d") {
+    nowIconElement.setAttribute("class", "fas fa-cloud-sun-rain");
+  } else if (code === "10n") {
+    nowIconElement.setAttribute("class", "fas fa-cloud-moon-rain");
+  } else if (code === "11f" || code === "11n") {
+    nowIconElement.setAttribute("class", "fas fa-bolt");
+  } else if (code === "13d" || code === "13n") {
+    nowIconElement.setAttribute("class", "fas fa-snowflake");
+  } else {
+    nowIconElement.setAttribute("class", "fas fa-smog");
+  }
+}
+
+// Function: Show Temp
 
 function showTemperature(response) {
   document.querySelector("#city").innerHTML = response.data.name;
@@ -11,9 +45,15 @@ function showTemperature(response) {
   let tempTodayMax = Math.round(response.data.main.temp_max);
   let tempTodayMinMax = `${tempTodayMin}°/${tempTodayMax}°`;
   document.querySelector("#today-temp").innerHTML = tempTodayMinMax;
+
+  updateNowIcon(response.data.weather[0].icon);
+
+  document
+    .querySelector("#now-icon")
+    .setAttribute("alt", response.data.weather[0].description);
 }
 
-// Celsius & Fahrenheit
+// Function: Celsius & Fahrenheit
 
 function convertToCelsius(event) {
   document.querySelector("#current-temp").innerHTML = 23;
@@ -23,7 +63,7 @@ function convertToFahrenheit(event) {
   document.querySelector("#current-temp").innerHTML = 73;
 }
 
-// Search city
+// Function: Search city
 
 function searchCity(city) {
   if (city) {
@@ -37,7 +77,7 @@ function searchCity(city) {
   }
 }
 
-// Functions: Date & Time
+// Function: Date & Time
 
 function formatDate(date) {
   let weekDays = [
@@ -67,7 +107,7 @@ function formatDate(date) {
   return `${weekDay}, ${hours}:${minutes}`;
 }
 
-// Functions: handleSubmit
+// Function: handleSubmit
 
 function handleSubmit(event) {
   event.preventDefault();
@@ -76,7 +116,7 @@ function handleSubmit(event) {
   searchCity(city);
 }
 
-// Functions: Geolocation
+// Function: Geolocation
 
 function searchLocation(position) {
   let latitude = position.coords.latitude;
