@@ -214,15 +214,15 @@ form {
   }
 }
 
-/* iframe.spotify {
+iframe.spotify {
   width: 215px;
-} */
+}
 
-/* @media (min-width: 800px) {
+@media (min-width: 800px) {
   iframe.spotify {
     width: 300px;
   }
-} */
+}
 
 .player h3 {
   font-family: "Montserrat Subrayada", sans-serif;

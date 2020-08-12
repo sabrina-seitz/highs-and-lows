@@ -1,3 +1,125 @@
+// Function: Update Song & Description (Player)
+
+function updatePlayer(code) {
+  let musicPlayerElement = document.querySelector("#music-player");
+  let spotifyLink = "https://open.spotify.com/embed/track/";
+  let textPlayerElement = document.querySelector("#text-player");
+
+  if (code === "01d") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}4Fe4a65JErIRywwlm2x5ob`
+    );
+    textPlayerElement.innerHTML =
+      "Enjoy this beautiful sunny day! Here's the perfect soundtrack for today’s wild adventures:";
+  } else if (code === "01n") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}3hRV0jL3vUpRrcy398teAU`
+    );
+    textPlayerElement.innerHTML =
+      "What a crystal-clear, cloudless sky! Here's the perfect soundtrack for this beautiful starry night:";
+  } else if (code === "02d") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}2k4qxMwA8PmA8OOY5cCSnr`
+    );
+    textPlayerElement.innerHTML =
+      "Yeehaw, there’re only a few clouds in the sky! Listen to the perfect soundtrack for this gorgeous day:";
+  } else if (code === "02n") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}2PQNABElbdO5wXhEWbF6gg`
+    );
+    textPlayerElement.innerHTML =
+      "There’re a few clouds hiding the stars in the sky. Listen to the perfect soundtrack for gloomy nights:";
+  } else if (code === "03d" || code === "04d") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}1fu7I8XhF0Yk4qlwTf2Do1`
+    );
+    textPlayerElement.innerHTML =
+      "Turn up the music and forget about the clouds! Here's the perfect soundtrack for grey days:";
+  } else if (code === "03n" || code === "04n") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}1fu7I8XhF0Yk4qlwTf2Do1`
+    );
+    textPlayerElement.innerHTML =
+      "Turn up the music and forget about the clouds! Here's the perfect soundtrack for gloomy nights:";
+  } else if (code === "09d") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}7sqOLGaoAUBxPUL5w1mUZv`
+    );
+    textPlayerElement.innerHTML =
+      "Turn up the music and forget about the rain! Here's the perfect soundtrack for grey days:";
+  } else if (code === "09n") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}7sqOLGaoAUBxPUL5w1mUZv`
+    );
+    textPlayerElement.innerHTML =
+      "Turn up the music and forget about the rain! Here's the perfect soundtrack for starless nights:";
+  } else if (code === "10d") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}0ecM7uGyjgJnBliXS2fPP9`
+    );
+    textPlayerElement.innerHTML =
+      "Turn up the music and forget about the rain! Here's the perfect soundtrack for grey days:";
+  } else if (code === "10n") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}6EarBwcaOb0gj12jqrJk2G`
+    );
+    textPlayerElement.innerHTML =
+      "Turn up the music and forget about the rain! Here's the perfect soundtrack for starless nights:";
+  } else if (code === "11d") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}6L9pR4PhEuTfjE33nTQdgn`
+    );
+    textPlayerElement.innerHTML =
+      "Turn up the music and forget about the thunder! Here's the perfect soundtrack for stormy days:";
+  } else if (code === "11n") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}6L9pR4PhEuTfjE33nTQdgn`
+    );
+    textPlayerElement.innerHTML =
+      "Turn up the music and forget about the thunder! Here's the perfect soundtrack for scary nights:";
+  } else if (code === "13d") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}7Gogd7R68UpTsQle3bqYv5`
+    );
+    textPlayerElement.innerHTML =
+      "Turn up the music and forget about the cold! Here's a heartwarming track for snowy days:";
+  } else if (code === "13n") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}7Gogd7R68UpTsQle3bqYv5`
+    );
+    textPlayerElement.innerHTML =
+      "Turn up the music and forget about the cold! Here's a heartwarming track for snowy nights:";
+  } else if (code === "50d") {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}7Gogd7R68UpTsQle3bqYv5`
+    );
+    textPlayerElement.innerHTML =
+      "Turn up the music and forget about the mist! Here's the perfect soundtrack for gloomy days:";
+  } else {
+    musicPlayerElement.setAttribute(
+      "src",
+      `${spotifyLink}6oAxXy1ShGGk4XBXGKuPmB`
+    );
+    textPlayerElement.innerHTML =
+      "Turn up the music and forget about the mist! Here's the perfect soundtrack for starless nights:";
+  }
+}
+
 //Function: Update Icon (current weather)
 function updateNowIcon(code) {
   let nowIconElement = document.querySelector("#now-icon");
@@ -23,7 +145,7 @@ function updateNowIcon(code) {
     nowIconElement.setAttribute("class", "fas fa-cloud-sun-rain");
   } else if (code === "10n") {
     nowIconElement.setAttribute("class", "fas fa-cloud-moon-rain");
-  } else if (code === "11f" || code === "11n") {
+  } else if (code === "11d" || code === "11n") {
     nowIconElement.setAttribute("class", "fas fa-bolt");
   } else if (code === "13d" || code === "13n") {
     nowIconElement.setAttribute("class", "fas fa-snowflake");
@@ -49,6 +171,7 @@ function showTemperature(response) {
   document.querySelector("#today-temp").innerHTML = tempTodayMinMax;
 
   updateNowIcon(response.data.weather[0].icon);
+  updatePlayer(response.data.weather[0].icon);
 
   document
     .querySelector("#now-icon")
