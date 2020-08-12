@@ -165,10 +165,10 @@ function showTemperature(response) {
     celsiusTemperature
   );
 
-  let tempTodayMin = Math.round(response.data.main.temp_min);
-  let tempTodayMax = Math.round(response.data.main.temp_max);
-  let tempTodayMinMax = `${tempTodayMin}°/${tempTodayMax}°`;
-  document.querySelector("#today-temp").innerHTML = tempTodayMinMax;
+  celsiusTempTodayMin = Math.round(response.data.main.temp_min);
+  celsiusTempTodayMax = Math.round(response.data.main.temp_max);
+  let celsiusTempTodayMinMax = `${celsiusTempTodayMin}°/${celsiusTempTodayMax}°`;
+  document.querySelector("#today-temp").innerHTML = celsiusTempTodayMinMax;
 
   updateNowIcon(response.data.weather[0].icon);
   updatePlayer(response.data.weather[0].icon);
@@ -190,6 +190,10 @@ function convertToFahrenheit(event) {
   document.querySelector("#current-temp").innerHTML = Math.round(
     fahrenheitTemperature
   );
+  let fahrenheitTempTodayMin = Math.round((celsiusTempTodayMin * 9) / 5 + 32);
+  let fahrenheitTempTodayMax = Math.round((celsiusTempTodayMax * 9) / 5 + 32);
+  let fahrenheitTempTodayMinMax = `${fahrenheitTempTodayMin}°/${fahrenheitTempTodayMax}°`;
+  document.querySelector("#today-temp").innerHTML = fahrenheitTempTodayMinMax;
 }
 
 function convertToCelsius(event) {
@@ -201,6 +205,9 @@ function convertToCelsius(event) {
   document.querySelector("#current-temp").innerHTML = Math.round(
     celsiusTemperature
   );
+  document.querySelector(
+    "#today-temp"
+  ).innerHTML = `${celsiusTempTodayMin}°/${celsiusTempTodayMax}°`;
 }
 
 // Function: Search city
@@ -282,6 +289,8 @@ document.querySelector("#date-time").innerHTML = formatDate(now);
 // Celsius & Fahrenheit
 
 let celsiusTemperature = null;
+let celsiusTempTodayMin = null;
+let celsiusTempTodayMax = null;
 
 let fahrenheitLink = document.querySelector("#fahrenheit");
 fahrenheitLink.addEventListener("click", convertToFahrenheit);
