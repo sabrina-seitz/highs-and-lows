@@ -1,3 +1,59 @@
+//Function: Update Icon (current weather)
+
+function swapWeatherIcon(code) {
+  if (code === "01d") {
+    return "fas fa-sun";
+  } else if (code === "01n") {
+    return "fas fa-moon";
+  } else if (code === "02d") {
+    return "fas fa-cloud-sun";
+  } else if (code === "02n") {
+    return "fas fa-cloud-moon";
+  } else if (
+    code === "03d" ||
+    code === "03n" ||
+    code === "04d" ||
+    code === "04n"
+  ) {
+    return "fas fa-cloud";
+  } else if (code === "09d" || code === "09n") {
+    return "fas fa-cloud-showers-heavy";
+  } else if (code === "10d") {
+    return "fas fa-cloud-sun-rain";
+  } else if (code === "10n") {
+    return "fas fa-cloud-moon-rain";
+  } else if (code === "11d" || code === "11n") {
+    return "fas fa-bolt";
+  } else if (code === "13d" || code === "13n") {
+    return "fas fa-snowflake";
+  } else {
+    return "fas fa-smog";
+  }
+}
+
+//Function: Show Forecast
+
+function showForecast(response) {
+  let forecastElement = document.querySelector("#forecast");
+  forecastElement.innerHTML = null;
+  forecast = null;
+
+  for (let index = 1; index < 6; index++) {
+    forecast = response.data.daily[index];
+    forecastElement.innerHTML += `
+    <div class="col">
+      <div class="forecast-temp">${Math.round(forecast.temp.min)}°/${Math.round(
+      forecast.temp.max
+    )}°</div>
+      <i class= "forecast-icon ${swapWeatherIcon(
+        forecast.weather[0].icon
+      )}"> </i>
+      <div class="forecast-day">${formatDay(forecast.dt * 1000).substring(0, 3)}
+      </div>
+      </div>`;
+  }
+}
+
 // Function: Update Song & Description (Player)
 
 function updatePlayer(code) {
@@ -11,7 +67,7 @@ function updatePlayer(code) {
       `${spotifyLink}4Fe4a65JErIRywwlm2x5ob`
     );
     textPlayerElement.innerHTML =
-      "Enjoy this beautiful sunny day! Here's the perfect soundtrack for today’s wild adventures:";
+      "Enjoy this beautiful sunny day! Get inspired by this soundtrack for today’s wild adventures:";
   } else if (code === "01n") {
     musicPlayerElement.setAttribute(
       "src",
@@ -120,38 +176,35 @@ function updatePlayer(code) {
   }
 }
 
-//Function: Update Icon (current weather)
-function updateNowIcon(code) {
-  let nowIconElement = document.querySelector("#now-icon");
+// Function: Date & Time
 
-  if (code === "01d") {
-    nowIconElement.setAttribute("class", "fas fa-sun");
-  } else if (code === "01n") {
-    nowIconElement.setAttribute("class", "fas fa-moon");
-  } else if (code === "02d") {
-    nowIconElement.setAttribute("class", "fas fa-cloud-sun");
-  } else if (code === "02n") {
-    nowIconElement.setAttribute("class", "fas fa-cloud-moon");
-  } else if (
-    code === "03d" ||
-    code === "03n" ||
-    code === "04d" ||
-    code === "04n"
-  ) {
-    nowIconElement.setAttribute("class", "fas fa-cloud");
-  } else if (code === "09d" || code === "09n") {
-    nowIconElement.setAttribute("class", "fas fa-cloud-showers-heavy");
-  } else if (code === "10d") {
-    nowIconElement.setAttribute("class", "fas fa-cloud-sun-rain");
-  } else if (code === "10n") {
-    nowIconElement.setAttribute("class", "fas fa-cloud-moon-rain");
-  } else if (code === "11d" || code === "11n") {
-    nowIconElement.setAttribute("class", "fas fa-bolt");
-  } else if (code === "13d" || code === "13n") {
-    nowIconElement.setAttribute("class", "fas fa-snowflake");
-  } else {
-    nowIconElement.setAttribute("class", "fas fa-smog");
+function formatDate(timestamp) {
+  let date = new Date(timestamp);
+  let hours = date.getHours();
+  if (hours < 10) {
+    hours = `0${hours}`;
   }
+  let minutes = date.getMinutes();
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+
+  return `${formatDay(timestamp)} ${hours}:${minutes}`;
+}
+
+function formatDay(timestamp) {
+  let date = new Date(timestamp);
+  let days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  let day = days[date.getDay()];
+  return day;
 }
 
 // Function: Show Temp
@@ -170,12 +223,18 @@ function showTemperature(response) {
   let celsiusTempTodayMinMax = `${celsiusTempTodayMin}°/${celsiusTempTodayMax}°`;
   document.querySelector("#today-temp").innerHTML = celsiusTempTodayMinMax;
 
-  updateNowIcon(response.data.weather[0].icon);
+  let nowIconElement = document.querySelector("#now-icon");
+
+  let icon = swapWeatherIcon(response.data.weather[0].icon);
+  nowIconElement.setAttribute("class", `${icon}`);
   updatePlayer(response.data.weather[0].icon);
 
-  document
-    .querySelector("#now-icon")
-    .setAttribute("alt", response.data.weather[0].description);
+  nowIconElement.setAttribute("alt", response.data.weather[0].description);
+
+  latitude = response.data.coord.lat;
+  longitude = response.data.coord.lon;
+
+  searchLocationForecast();
 }
 
 // Function: Celsius & Fahrenheit
@@ -214,44 +273,12 @@ function convertToCelsius(event) {
 
 function searchCity(city) {
   if (city) {
-    let apiKey = "e5551b43cbca96dceabb04d6c75c6371";
-    let units = "metric";
     let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}`;
 
     axios.get(`${apiUrl}&appid=${apiKey}`).then(showTemperature);
   } else {
     alert("Please enter a city");
   }
-}
-
-// Function: Date & Time
-
-function formatDate(date) {
-  let weekDays = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-
-  let weekDay = weekDays[date.getDay()];
-
-  let hours = date.getHours();
-
-  if (hours < 10) {
-    hours = `0${hours}`;
-  }
-
-  let minutes = date.getMinutes();
-
-  if (minutes < 10) {
-    minutes = `0${minutes}`;
-  }
-
-  return `${weekDay}, ${hours}:${minutes}`;
 }
 
 // Function: handleSubmit
@@ -266,14 +293,16 @@ function handleSubmit(event) {
 // Function: Geolocation
 
 function searchLocation(position) {
-  let latitude = position.coords.latitude;
-  let longitude = position.coords.longitude;
-  let units = "metric";
-
-  let apiKey = "e5551b43cbca96dceabb04d6c75c6371";
+  latitude = position.coords.latitude;
+  longitude = position.coords.longitude;
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=${units}`;
-
+  searchLocationForecast();
   axios.get(`${apiUrl}&appid=${apiKey}`).then(showTemperature);
+}
+
+function searchLocationForecast(position) {
+  let apiUrlForecast = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=${units}&exclude=hourly,current,minutely,hourly`;
+  axios.get(`${apiUrlForecast}&appid=${apiKey}`).then(showForecast);
 }
 
 function getGeolocation(event) {
@@ -284,7 +313,7 @@ function getGeolocation(event) {
 // Date & Time
 
 let now = new Date();
-document.querySelector("#date-time").innerHTML = formatDate(now);
+document.querySelector("#date").innerHTML = formatDate(now);
 
 // Celsius & Fahrenheit
 
@@ -307,6 +336,11 @@ document.querySelector("#search-form").addEventListener("submit", handleSubmit);
 document
   .querySelector("#locate-button")
   .addEventListener("click", getGeolocation);
+
+let latitude = null;
+let longitude = null;
+let units = "metric";
+let apiKey = "e5551b43cbca96dceabb04d6c75c6371";
 
 // Weather API Munich
 
