@@ -47,7 +47,7 @@ body {
 }
 
 .head .today-temp {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 500;
   float: right;
 }
@@ -70,7 +70,7 @@ body {
 }
 
 .temp h1 {
-  font-size: 6rem;
+  font-size: 6.4rem;
   font-weight: 550;
   display: inline;
 }
@@ -129,10 +129,16 @@ body {
 
 .city-date h2 {
   text-transform: uppercase;
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 600;
   font-family: "Montserrat Subrayada", sans-serif;
   margin-bottom: 0;
+}
+
+@media (min-width: 576px) {
+  .city-date h2 {
+    font-size: 3rem;
+  }
 }
 
 form {
@@ -168,7 +174,7 @@ form {
 }
 
 .forecast-day {
-  font-size: 0.97rem;
+  font-size: 1rem;
   font-weight: 300;
   text-transform: uppercase;
 }
