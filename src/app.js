@@ -41,7 +41,7 @@ function showForecast(response) {
   for (let index = 1; index < 6; index++) {
     forecast = response.data.daily[index];
     forecastElement.innerHTML += `
-    <div class="col">
+    <div class="col text-center">
       <div class="forecast-temp">${Math.round(forecast.temp.min)}°/${Math.round(
       forecast.temp.max
     )}°</div>
