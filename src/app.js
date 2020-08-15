@@ -36,7 +36,8 @@ function swapWeatherIcon(code) {
 function showForecast(response) {
   let forecastElement = document.querySelector("#forecast");
   forecastElement.innerHTML = null;
-  forecast = null;
+
+  forecastGlobal = response.data.daily;
 
   for (let index = 1; index < 6; index++) {
     forecast = response.data.daily[index];
@@ -253,6 +254,24 @@ function convertToFahrenheit(event) {
   let fahrenheitTempTodayMax = Math.round((celsiusTempTodayMax * 9) / 5 + 32);
   let fahrenheitTempTodayMinMax = `${fahrenheitTempTodayMin}°/${fahrenheitTempTodayMax}°`;
   document.querySelector("#today-temp").innerHTML = fahrenheitTempTodayMinMax;
+
+  let forecastElement = document.querySelector("#forecast");
+  forecastElement.innerHTML = null;
+
+  for (let index = 1; index < 6; index++) {
+    forecast = forecastGlobal[index];
+    forecastElement.innerHTML += `
+    <div class="col text-center">
+      <div class="forecast-temp">${Math.round(
+        (forecast.temp.min * 9) / 5 + 32
+      )}°/${Math.round((forecast.temp.max * 9) / 5 + 32)}°</div>
+      <i class= "forecast-icon ${swapWeatherIcon(
+        forecast.weather[0].icon
+      )}"> </i>
+      <div class="forecast-day">${formatDay(forecast.dt * 1000).substring(0, 3)}
+      </div>
+      </div>`;
+  }
 }
 
 function convertToCelsius(event) {
@@ -267,6 +286,24 @@ function convertToCelsius(event) {
   document.querySelector(
     "#today-temp"
   ).innerHTML = `${celsiusTempTodayMin}°/${celsiusTempTodayMax}°`;
+
+  let forecastElement = document.querySelector("#forecast");
+  forecastElement.innerHTML = null;
+
+  for (let index = 1; index < 6; index++) {
+    forecast = forecastGlobal[index];
+    forecastElement.innerHTML += `
+    <div class="col text-center">
+      <div class="forecast-temp">${Math.round(forecast.temp.min)}°/${Math.round(
+      forecast.temp.max
+    )}°</div>
+      <i class= "forecast-icon ${swapWeatherIcon(
+        forecast.weather[0].icon
+      )}"> </i>
+      <div class="forecast-day">${formatDay(forecast.dt * 1000).substring(0, 3)}
+      </div>
+      </div>`;
+  }
 }
 
 // Function: Search city
@@ -341,6 +378,8 @@ let latitude = null;
 let longitude = null;
 let units = "metric";
 let apiKey = "e5551b43cbca96dceabb04d6c75c6371";
+
+let forecastGlobal = null;
 
 // Weather API Munich
 
