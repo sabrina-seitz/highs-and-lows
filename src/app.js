@@ -1,49 +1,176 @@
-//Function: Update Icon (current weather)
+//create weather object with icon class, Spotify song Id & track description
 
-function swapWeatherIcon(code) {
-  if (code === "01d") {
-    return "fas fa-sun";
-  } else if (code === "01n") {
-    return "fas fa-moon";
-  } else if (code === "02d") {
-    return "fas fa-cloud-sun";
-  } else if (code === "02n") {
-    return "fas fa-cloud-moon";
-  } else if (
-    code === "03d" ||
-    code === "03n" ||
-    code === "04d" ||
-    code === "04n"
-  ) {
-    return "fas fa-cloud";
-  } else if (code === "09d" || code === "09n") {
-    return "fas fa-cloud-showers-heavy";
-  } else if (code === "10d") {
-    return "fas fa-cloud-sun-rain";
-  } else if (code === "10n") {
-    return "fas fa-cloud-moon-rain";
-  } else if (code === "11d" || code === "11n") {
-    return "fas fa-bolt";
-  } else if (code === "13d" || code === "13n") {
-    return "fas fa-snowflake";
+let customWeatherData = {
+  "01d": {
+    // clear sky, day
+    iconClass: "fa-sun",
+    spotifyId: "4Fe4a65JErIRywwlm2x5ob",
+    trackDescription:
+      "What a beautiful sunny day! Get inspired by this soundtrack for today’s wild adventures:",
+  },
+  "01n": {
+    // clear sky, night
+    iconClass: "fa-moon",
+    spotifyId: "3hRV0jL3vUpRrcy398teAU",
+    trackDescription:
+      "What a crystal-clear, cloudless sky! Here's the perfect soundtrack for looking at the stars:",
+  },
+  "02d": {
+    // few clouds, day
+    iconClass: "fa-cloud-sun",
+    spotifyId: "2k4qxMwA8PmA8OOY5cCSnr",
+    trackDescription:
+      "Yeehaw, there’re only a few clouds in the sky! Listen to the perfect soundtrack for this wonderful day:",
+  },
+  "02n": {
+    // few clouds, night
+    iconClass: "fa-cloud-moon",
+    spotifyId: "2PQNABElbdO5wXhEWbF6gg",
+    trackDescription:
+      "Turn up the music and forget about the clouds hiding the stars! Here's the perfect track for gloomy nights:",
+  },
+  "03d": {
+    // scattered clouds, day
+    iconClass: "fa-cloud",
+    spotifyId: "1fu7I8XhF0Yk4qlwTf2Do1",
+    trackDescription:
+      "Turn up the music and forget about the grey sky! Here's the perfect soundtrack for cloudy days:",
+  },
+  "03n": {
+    // scattered clouds, night
+    iconClass: "fa-cloud",
+    spotifyId: "6HPZo9krwjbhMGKbqVkkDQ",
+    trackDescription:
+      "Turn up the music and forget about the clouds! Here's the perfect soundtrack for starless nights:",
+  },
+  "04d": {
+    // broken clouds, day
+    iconClass: "fa-cloud",
+    spotifyId: "2jgO1U79PZt7giXGV1dbd7",
+    trackDescription:
+      "Turn up the music and forget about the grey sky! Here's the perfect soundtrack for cloudy days:",
+  },
+  "04n": {
+    // broken clouds, night
+    iconClass: "fa-cloud",
+    spotifyId: "0cAo4yYl8sVoabZs27gwN2",
+    trackDescription:
+      "Turn up the music and forget about the clouds! Here's the perfect soundtrack for starless nights:",
+  },
+  "09d": {
+    // shower rain, day
+    iconClass: "fa-cloud-showers-heavy",
+    spotifyId: "2YG3fktEoHQAUlXP9VtmRN",
+    trackDescription:
+      "Turn up the music and forget about the rain! Here's the perfect soundtrack for grey days:",
+  },
+  "09n": {
+    // shower rain, night
+    iconClass: "fa-cloud-showers-heavy",
+    spotifyId: "7sqOLGaoAUBxPUL5w1mUZv",
+    trackDescription:
+      "Turn up the music and forget about the rain! Here's the perfect soundtrack for starless nights:",
+  },
+  "10d": {
+    // rain, day
+    iconClass: "fa-cloud-sun-rain",
+    spotifyId: "0ecM7uGyjgJnBliXS2fPP9",
+    trackDescription:
+      "It's raining cats and dogs! Here's the perfect soundtrack for singing in the rain and forgetting about the grey:",
+  },
+  "10n": {
+    // rain, night
+    iconClass: "fa-cloud-moon-rain",
+    spotifyId: "6EarBwcaOb0gj12jqrJk2G",
+    trackDescription:
+      "Turn up the music and forget about the rain! Here's the perfect soundtrack for starless nights:",
+  },
+  "11d": {
+    // thunderstorm, day
+    iconClass: "fa-bolt",
+    spotifyId: "6L9pR4PhEuTfjE33nTQdgn",
+    trackDescription:
+      "Turn up the music and drown out the thunder! Here's the perfect soundtrack for stormy days:",
+  },
+  "11n": {
+    // thunderstorm, night
+    iconClass: "fa-bolt",
+    spotifyId: "0GQeRhpKjPwEnOwskqtveD",
+    trackDescription:
+      "Turn up the music and drown out the thunder! Here's the perfect soundtrack for scary nights:",
+  },
+  "13d": {
+    // snow, day
+    iconClass: "fa-snowflake",
+    spotifyId: "7Gogd7R68UpTsQle3bqYv5",
+    trackDescription:
+      "Turn up the music and forget about the cold! Here's a heartwarming track for snowy days:",
+  },
+  "13n": {
+    // snow, night
+    iconClass: "fa-snowflake",
+    spotifyId: "31wS6gEaj89kOZhDw0xMNw",
+    trackDescription:
+      "Turn up the music and forget about the cold! Here's a heartwarming track for snowy nights:",
+  },
+  "50d": {
+    // mist, day
+    iconClass: "fa-smog",
+    spotifyId: "6oAxXy1ShGGk4XBXGKuPmB",
+    trackDescription:
+      "Turn up the music and forget about the mist! Here's the perfect soundtrack for gloomy days:",
+  },
+  "50n": {
+    // mist, night
+    iconClass: "fa-smog",
+    spotifyId: "5XXsoXGSO43Nt2pZ4JjWzF",
+    trackDescription:
+      "Turn up the music and forget about the mist! Here's the perfect soundtrack for starless nights:",
+  },
+  default: {
+    // if we get an unusual code
+    iconClass: "fa-question",
+    spotifyId: "4CbV2ZD2OsnRGGDWibv0Wn",
+    trackDescription:
+      "You seem to have weird weather! Get weirded out some more with this track:",
+  },
+};
+
+// get the class of the weather icon, needed for dark mode
+function getWeatherIconClass(code) {
+  if (!(code in customWeatherData)) {
+    code = "default";
+  }
+  return customWeatherData[code].iconClass;
+}
+
+// degree conversion from celcius to fahrenheit
+function getFahrenheit(temp) {
+  return Math.round((temp * 9) / 5 + 32);
+}
+
+function getMinMaxForecastTemps(unit, minTemp, maxTemp) {
+  if (unit === "fahrenheit") {
+    return `${getFahrenheit(minTemp)}°/${getFahrenheit(maxTemp)}°`;
   } else {
-    return "fas fa-smog";
+    return `${Math.round(minTemp)}°/${Math.round(maxTemp)}°`;
   }
 }
 
-//Function: Show Forecast
-
-function showForecastCelsius(event) {
+// set 5 forecast days, with temperatures, weather icon and weekday
+function setForecasts(unit) {
   forecastElement.innerHTML = null;
 
-  for (let index = 1; index < 6; index++) {
+  for (let index = 1; index <= 5; index++) {
     forecast = forecastGlobal[index];
     forecastElement.innerHTML += `
     <div class="col text-center">
-      <div class="forecast-temp">${Math.round(forecast.temp.min)}°/${Math.round(
-      forecast.temp.max
-    )}°</div>
-      <i class= "forecast-icon ${swapWeatherIcon(
+      <div class="forecast-temp">${getMinMaxForecastTemps(
+        unit,
+        forecast.temp.min,
+        forecast.temp.max
+      )}</div>
+      <i class="forecast-icon fas ${getWeatherIconClass(
         forecast.weather[0].icon
       )}"> </i>
       <div class="forecast-day">${formatDay(forecast.dt * 1000).substring(0, 3)}
@@ -52,155 +179,60 @@ function showForecastCelsius(event) {
   }
 }
 
-function showForecastFahrenheit(event) {
-  forecastElement.innerHTML = null;
+function convertToFahrenheit(event) {
+  event.preventDefault();
+  celsiusLink.classList.remove("active");
+  celsiusLink.classList.add("inactive");
+  fahrenheitLink.classList.add("active");
+  fahrenheitLink.classList.remove("inactive");
+  document.querySelector("#current-temp").innerHTML = getFahrenheit(
+    celsiusTemperature
+  );
+  let fahrenheitTempTodayMinMax = `${getFahrenheit(
+    celsiusTempTodayMin
+  )}°/${getFahrenheit(celsiusTempTodayMax)}°`;
+  document.querySelector("#today-temp").innerHTML = fahrenheitTempTodayMinMax;
 
-  for (let index = 1; index < 6; index++) {
-    forecast = forecastGlobal[index];
-    forecastElement.innerHTML += `
-    <div class="col text-center">
-      <div class="forecast-temp">${Math.round(
-        (forecast.temp.min * 9) / 5 + 32
-      )}°/${Math.round((forecast.temp.max * 9) / 5 + 32)}°</div>
-      <i class= "forecast-icon ${swapWeatherIcon(
-        forecast.weather[0].icon
-      )}"> </i>
-      <div class="forecast-day">${formatDay(forecast.dt * 1000).substring(0, 3)}
-      </div>
-      </div>`;
-  }
+  setForecasts("fahrenheit");
+}
+
+function convertToCelsius(event) {
+  event.preventDefault();
+  celsiusLink.classList.add("active");
+  celsiusLink.classList.remove("inactive");
+  fahrenheitLink.classList.remove("active");
+  fahrenheitLink.classList.add("inactive");
+  document.querySelector("#current-temp").innerHTML = Math.round(
+    celsiusTemperature
+  );
+  document.querySelector(
+    "#today-temp"
+  ).innerHTML = `${celsiusTempTodayMin}°/${celsiusTempTodayMax}°`;
+
+  setForecasts("celsius");
 }
 
 function showForecast(response) {
   forecastGlobal = response.data.daily;
-
-  showForecastCelsius();
+  setForecasts("celsius");
 }
 
-// Function: Update Song & Description (Player)
-
+// update song & description in the Spotify player widget
 function updatePlayer(code) {
   let musicPlayerElement = document.querySelector("#music-player");
-  let spotifyLink = "https://open.spotify.com/embed/track/";
   let textPlayerElement = document.querySelector("#text-player");
 
-  if (code === "01d") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}4Fe4a65JErIRywwlm2x5ob`
-    );
-    textPlayerElement.innerHTML =
-      "What a beautiful sunny day! Get inspired by this soundtrack for today’s wild adventures:";
-  } else if (code === "01n") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}3hRV0jL3vUpRrcy398teAU`
-    );
-    textPlayerElement.innerHTML =
-      "What a crystal-clear, cloudless sky! Here's the perfect soundtrack for looking at the stars:";
-  } else if (code === "02d") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}2k4qxMwA8PmA8OOY5cCSnr`
-    );
-    textPlayerElement.innerHTML =
-      "Yeehaw, there’re only a few clouds in the sky! Listen to the perfect soundtrack for this wonderful day:";
-  } else if (code === "02n") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}2PQNABElbdO5wXhEWbF6gg`
-    );
-    textPlayerElement.innerHTML =
-      "Turn up the music and forget about the clouds hiding the stars! Here's the perfect track for gloomy nights:";
-  } else if (code === "03d" || code === "04d") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}1fu7I8XhF0Yk4qlwTf2Do1`
-    );
-    textPlayerElement.innerHTML =
-      "Turn up the music and forget about the grey sky! Here's the perfect soundtrack for cloudy days:";
-  } else if (code === "03n" || code === "04n") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}1fu7I8XhF0Yk4qlwTf2Do1`
-    );
-    textPlayerElement.innerHTML =
-      "Turn up the music and forget about the clouds! Here's the perfect soundtrack for starless nights:";
-  } else if (code === "09d") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}7sqOLGaoAUBxPUL5w1mUZv`
-    );
-    textPlayerElement.innerHTML =
-      "Turn up the music and forget about the rain! Here's the perfect soundtrack for grey days:";
-  } else if (code === "09n") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}7sqOLGaoAUBxPUL5w1mUZv`
-    );
-    textPlayerElement.innerHTML =
-      "Turn up the music and forget about the rain! Here's the perfect soundtrack for starless nights:";
-  } else if (code === "10d") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}0ecM7uGyjgJnBliXS2fPP9`
-    );
-    textPlayerElement.innerHTML =
-      "It's raining cats and dogs! Here's the perfect soundtrack for singing in the rain and forgetting about the grey:";
-  } else if (code === "10n") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}6EarBwcaOb0gj12jqrJk2G`
-    );
-    textPlayerElement.innerHTML =
-      "Turn up the music and forget about the rain! Here's the perfect soundtrack for starless nights:";
-  } else if (code === "11d") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}6L9pR4PhEuTfjE33nTQdgn`
-    );
-    textPlayerElement.innerHTML =
-      "Turn up the music and forget about the thunder! Here's the perfect soundtrack for stormy days:";
-  } else if (code === "11n") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}6L9pR4PhEuTfjE33nTQdgn`
-    );
-    textPlayerElement.innerHTML =
-      "Turn up the music and forget about the thunder! Here's the perfect soundtrack for scary nights:";
-  } else if (code === "13d") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}7Gogd7R68UpTsQle3bqYv5`
-    );
-    textPlayerElement.innerHTML =
-      "Turn up the music and forget about the cold! Here's a heartwarming track for snowy days:";
-  } else if (code === "13n") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}7Gogd7R68UpTsQle3bqYv5`
-    );
-    textPlayerElement.innerHTML =
-      "Turn up the music and forget about the cold! Here's a heartwarming track for snowy nights:";
-  } else if (code === "50d") {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}7Gogd7R68UpTsQle3bqYv5`
-    );
-    textPlayerElement.innerHTML =
-      "Turn up the music and forget about the mist! Here's the perfect soundtrack for gloomy days:";
-  } else {
-    musicPlayerElement.setAttribute(
-      "src",
-      `${spotifyLink}6oAxXy1ShGGk4XBXGKuPmB`
-    );
-    textPlayerElement.innerHTML =
-      "Turn up the music and forget about the mist! Here's the perfect soundtrack for starless nights:";
+  if (!(code in customWeatherData)) {
+    code = "default";
   }
+  musicPlayerElement.setAttribute(
+    "src",
+    `https://open.spotify.com/embed/track/${customWeatherData[code].spotifyId}`
+  );
+  textPlayerElement.innerHTML = customWeatherData[code].trackDescription;
 }
 
-// Function: Date & Time
-
+// get date & time
 function formatDate(timestamp) {
   let date = new Date(timestamp);
   let hours = date.getHours();
@@ -230,120 +262,85 @@ function formatDay(timestamp) {
   return day;
 }
 
-// Function: Show Temp
-
-function showTemperature(response) {
-  document.querySelector("#city").innerHTML = response.data.name;
-
-  celsiusTemperature = response.data.main.temp;
+function showToday(response) {
+  document.querySelector("#city").innerHTML = cityName;
+  celsiusTemperature = response.data.current.temp;
 
   document.querySelector("#current-temp").innerHTML = Math.round(
     celsiusTemperature
   );
 
-  celsiusTempTodayMin = Math.round(response.data.main.temp_min);
-  celsiusTempTodayMax = Math.round(response.data.main.temp_max);
+  celsiusTempTodayMin = Math.round(response.data.daily[0].temp.min);
+  celsiusTempTodayMax = Math.round(response.data.daily[0].temp.max);
   let celsiusTempTodayMinMax = `${celsiusTempTodayMin}°/${celsiusTempTodayMax}°`;
   document.querySelector("#today-temp").innerHTML = celsiusTempTodayMinMax;
 
   let nowIconElement = document.querySelector("#now-icon");
 
-  let icon = swapWeatherIcon(response.data.weather[0].icon);
-  nowIconElement.setAttribute("class", `${icon}`);
-  updatePlayer(response.data.weather[0].icon);
+  let iconClass = getWeatherIconClass(response.data.current.weather[0].icon);
+  nowIconElement.setAttribute("class", `fas ${iconClass}`);
+  updatePlayer(response.data.current.weather[0].icon);
 
-  nowIconElement.setAttribute("alt", response.data.weather[0].description);
+  nowIconElement.setAttribute(
+    "alt",
+    response.data.current.weather[0].description
+  );
 
+  return response;
+}
+
+function getLocationInfo(response) {
+  cityName = response.data.name;
   latitude = response.data.coord.lat;
   longitude = response.data.coord.lon;
-
-  searchLocationForecast();
+  return response;
 }
 
-// Function: Celsius & Fahrenheit
-
-function convertToFahrenheit(event) {
+// process input from form
+function handleSubmit(event) {
   event.preventDefault();
-  celsiusLink.classList.remove("active");
-  celsiusLink.classList.add("inactive");
-  fahrenheitLink.classList.add("active");
-  fahrenheitLink.classList.remove("inactive");
-  let fahrenheitTemperature = (celsiusTemperature * 9) / 5 + 32;
-  document.querySelector("#current-temp").innerHTML = Math.round(
-    fahrenheitTemperature
-  );
-  let fahrenheitTempTodayMin = Math.round((celsiusTempTodayMin * 9) / 5 + 32);
-  let fahrenheitTempTodayMax = Math.round((celsiusTempTodayMax * 9) / 5 + 32);
-  let fahrenheitTempTodayMinMax = `${fahrenheitTempTodayMin}°/${fahrenheitTempTodayMax}°`;
-  document.querySelector("#today-temp").innerHTML = fahrenheitTempTodayMinMax;
-
-  showForecastFahrenheit();
+  let city = document.querySelector("#city-input").value;
+  city = city.trim();
+  updateFromSearch(city);
 }
 
-function convertToCelsius(event) {
+function getWeatherData() {
+  let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=${units}&exclude=minutely,hourly`;
+  axios.get(`${apiUrl}&appid=${apiKey}`).then(showToday).then(showForecast);
+}
+
+function updateFromGeolocation(position) {
+  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=${units}`;
+  axios
+    .get(`${apiUrl}&appid=${apiKey}`)
+    .then(getLocationInfo)
+    .then(getWeatherData);
+}
+
+// when a user clicks the geolocation button (compass)
+function getGeolocation(event) {
   event.preventDefault();
-  celsiusLink.classList.add("active");
-  celsiusLink.classList.remove("inactive");
-  fahrenheitLink.classList.remove("active");
-  fahrenheitLink.classList.add("inactive");
-  document.querySelector("#current-temp").innerHTML = Math.round(
-    celsiusTemperature
-  );
-  document.querySelector(
-    "#today-temp"
-  ).innerHTML = `${celsiusTempTodayMin}°/${celsiusTempTodayMax}°`;
-
-  showForecastCelsius();
+  navigator.geolocation.getCurrentPosition(updateFromGeolocation);
 }
 
-// Function: Search city
-
-function searchCity(city) {
+// app start & user search
+function updateFromSearch(city) {
   if (city) {
     let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}`;
-
-    axios.get(`${apiUrl}&appid=${apiKey}`).then(showTemperature);
+    axios
+      .get(`${apiUrl}&appid=${apiKey}`)
+      .then(getLocationInfo)
+      .then(getWeatherData);
   } else {
     alert("Please enter a city");
   }
 }
 
-// Function: handleSubmit
-
-function handleSubmit(event) {
-  event.preventDefault();
-  let city = document.querySelector("#city-input").value;
-  city = city.trim();
-  searchCity(city);
-}
-
-// Function: Geolocation
-
-function searchLocation(position) {
-  latitude = position.coords.latitude;
-  longitude = position.coords.longitude;
-  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=${units}`;
-  searchLocationForecast();
-  axios.get(`${apiUrl}&appid=${apiKey}`).then(showTemperature);
-}
-
-function searchLocationForecast(position) {
-  let apiUrlForecast = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=${units}&exclude=hourly,current,minutely,hourly`;
-  axios.get(`${apiUrlForecast}&appid=${apiKey}`).then(showForecast);
-}
-
-function getGeolocation(event) {
-  event.preventDefault();
-  navigator.geolocation.getCurrentPosition(searchLocation);
-}
-
-// Date & Time
-
+// date & time
 let now = new Date();
 document.querySelector("#date").innerHTML = formatDate(now);
 
-// Celsius & Fahrenheit
-
+// celsius & fahrenheit
 let celsiusTemperature = null;
 let celsiusTempTodayMin = null;
 let celsiusTempTodayMax = null;
@@ -354,18 +351,16 @@ fahrenheitLink.addEventListener("click", convertToFahrenheit);
 let celsiusLink = document.querySelector("#celsius");
 celsiusLink.addEventListener("click", convertToCelsius);
 
-// Search
-
+// search event listener
 document.querySelector("#search-form").addEventListener("submit", handleSubmit);
 
-// Geolocation
-
+// get geolocation
 document
   .querySelector("#locate-button")
   .addEventListener("click", getGeolocation);
 
-// Global variables
-
+// global variables
+let cityName = null;
 let latitude = null;
 let longitude = null;
 let units = "metric";
@@ -373,6 +368,5 @@ let apiKey = "e5551b43cbca96dceabb04d6c75c6371";
 let forecastGlobal = null;
 let forecastElement = document.querySelector("#forecast");
 
-// Weather API Munich
-
-searchCity("Munich");
+// city for app start
+updateFromSearch("Munich");
