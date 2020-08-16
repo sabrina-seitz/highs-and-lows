@@ -33,14 +33,11 @@ function swapWeatherIcon(code) {
 
 //Function: Show Forecast
 
-function showForecast(response) {
-  let forecastElement = document.querySelector("#forecast");
+function showForecastCelsius(event) {
   forecastElement.innerHTML = null;
 
-  forecastGlobal = response.data.daily;
-
   for (let index = 1; index < 6; index++) {
-    forecast = response.data.daily[index];
+    forecast = forecastGlobal[index];
     forecastElement.innerHTML += `
     <div class="col text-center">
       <div class="forecast-temp">${Math.round(forecast.temp.min)}°/${Math.round(
@@ -53,6 +50,31 @@ function showForecast(response) {
       </div>
       </div>`;
   }
+}
+
+function showForecastFahrenheit(event) {
+  forecastElement.innerHTML = null;
+
+  for (let index = 1; index < 6; index++) {
+    forecast = forecastGlobal[index];
+    forecastElement.innerHTML += `
+    <div class="col text-center">
+      <div class="forecast-temp">${Math.round(
+        (forecast.temp.min * 9) / 5 + 32
+      )}°/${Math.round((forecast.temp.max * 9) / 5 + 32)}°</div>
+      <i class= "forecast-icon ${swapWeatherIcon(
+        forecast.weather[0].icon
+      )}"> </i>
+      <div class="forecast-day">${formatDay(forecast.dt * 1000).substring(0, 3)}
+      </div>
+      </div>`;
+  }
+}
+
+function showForecast(response) {
+  forecastGlobal = response.data.daily;
+
+  showForecastCelsius();
 }
 
 // Function: Update Song & Description (Player)
@@ -68,42 +90,42 @@ function updatePlayer(code) {
       `${spotifyLink}4Fe4a65JErIRywwlm2x5ob`
     );
     textPlayerElement.innerHTML =
-      "Enjoy this beautiful sunny day! Get inspired by this soundtrack for today’s wild adventures:";
+      "What a beautiful sunny day! Get inspired by this soundtrack for today’s wild adventures:";
   } else if (code === "01n") {
     musicPlayerElement.setAttribute(
       "src",
       `${spotifyLink}3hRV0jL3vUpRrcy398teAU`
     );
     textPlayerElement.innerHTML =
-      "What a crystal-clear, cloudless sky! Here's the perfect soundtrack for this beautiful starry night:";
+      "What a crystal-clear, cloudless sky! Here's the perfect soundtrack for looking at the stars:";
   } else if (code === "02d") {
     musicPlayerElement.setAttribute(
       "src",
       `${spotifyLink}2k4qxMwA8PmA8OOY5cCSnr`
     );
     textPlayerElement.innerHTML =
-      "Yeehaw, there’re only a few clouds in the sky! Listen to the perfect soundtrack for this gorgeous day:";
+      "Yeehaw, there’re only a few clouds in the sky! Listen to the perfect soundtrack for this wonderful day:";
   } else if (code === "02n") {
     musicPlayerElement.setAttribute(
       "src",
       `${spotifyLink}2PQNABElbdO5wXhEWbF6gg`
     );
     textPlayerElement.innerHTML =
-      "There’re a few clouds hiding the stars in the sky. Listen to the perfect soundtrack for gloomy nights:";
+      "Turn up the music and forget about the clouds hiding the stars! Here's the perfect track for gloomy nights:";
   } else if (code === "03d" || code === "04d") {
     musicPlayerElement.setAttribute(
       "src",
       `${spotifyLink}1fu7I8XhF0Yk4qlwTf2Do1`
     );
     textPlayerElement.innerHTML =
-      "Turn up the music and forget about the clouds! Here's the perfect soundtrack for grey days:";
+      "Turn up the music and forget about the grey sky! Here's the perfect soundtrack for cloudy days:";
   } else if (code === "03n" || code === "04n") {
     musicPlayerElement.setAttribute(
       "src",
       `${spotifyLink}1fu7I8XhF0Yk4qlwTf2Do1`
     );
     textPlayerElement.innerHTML =
-      "Turn up the music and forget about the clouds! Here's the perfect soundtrack for gloomy nights:";
+      "Turn up the music and forget about the clouds! Here's the perfect soundtrack for starless nights:";
   } else if (code === "09d") {
     musicPlayerElement.setAttribute(
       "src",
@@ -124,7 +146,7 @@ function updatePlayer(code) {
       `${spotifyLink}0ecM7uGyjgJnBliXS2fPP9`
     );
     textPlayerElement.innerHTML =
-      "Turn up the music and forget about the rain! Here's the perfect soundtrack for grey days:";
+      "It's raining cats and dogs! Here's the perfect soundtrack for singing in the rain and forgetting about the grey:";
   } else if (code === "10n") {
     musicPlayerElement.setAttribute(
       "src",
@@ -255,23 +277,7 @@ function convertToFahrenheit(event) {
   let fahrenheitTempTodayMinMax = `${fahrenheitTempTodayMin}°/${fahrenheitTempTodayMax}°`;
   document.querySelector("#today-temp").innerHTML = fahrenheitTempTodayMinMax;
 
-  let forecastElement = document.querySelector("#forecast");
-  forecastElement.innerHTML = null;
-
-  for (let index = 1; index < 6; index++) {
-    forecast = forecastGlobal[index];
-    forecastElement.innerHTML += `
-    <div class="col text-center">
-      <div class="forecast-temp">${Math.round(
-        (forecast.temp.min * 9) / 5 + 32
-      )}°/${Math.round((forecast.temp.max * 9) / 5 + 32)}°</div>
-      <i class= "forecast-icon ${swapWeatherIcon(
-        forecast.weather[0].icon
-      )}"> </i>
-      <div class="forecast-day">${formatDay(forecast.dt * 1000).substring(0, 3)}
-      </div>
-      </div>`;
-  }
+  showForecastFahrenheit();
 }
 
 function convertToCelsius(event) {
@@ -287,23 +293,7 @@ function convertToCelsius(event) {
     "#today-temp"
   ).innerHTML = `${celsiusTempTodayMin}°/${celsiusTempTodayMax}°`;
 
-  let forecastElement = document.querySelector("#forecast");
-  forecastElement.innerHTML = null;
-
-  for (let index = 1; index < 6; index++) {
-    forecast = forecastGlobal[index];
-    forecastElement.innerHTML += `
-    <div class="col text-center">
-      <div class="forecast-temp">${Math.round(forecast.temp.min)}°/${Math.round(
-      forecast.temp.max
-    )}°</div>
-      <i class= "forecast-icon ${swapWeatherIcon(
-        forecast.weather[0].icon
-      )}"> </i>
-      <div class="forecast-day">${formatDay(forecast.dt * 1000).substring(0, 3)}
-      </div>
-      </div>`;
-  }
+  showForecastCelsius();
 }
 
 // Function: Search city
@@ -374,12 +364,14 @@ document
   .querySelector("#locate-button")
   .addEventListener("click", getGeolocation);
 
+// Global variables
+
 let latitude = null;
 let longitude = null;
 let units = "metric";
 let apiKey = "e5551b43cbca96dceabb04d6c75c6371";
-
 let forecastGlobal = null;
+let forecastElement = document.querySelector("#forecast");
 
 // Weather API Munich
 
