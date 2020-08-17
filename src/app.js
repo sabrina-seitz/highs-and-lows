@@ -1,5 +1,226 @@
-//create weather object with icon class, Spotify song Id & track description
+// get the class of the weather icon, needed for dark mode
+function getWeatherIconClass(code) {
+  if (!(code in customWeatherData)) {
+    code = "default";
+  }
+  return customWeatherData[code].iconClass;
+}
 
+// degree conversion from celsius to fahrenheit
+function getFahrenheit(temp) {
+  return Math.round((temp * 9) / 5 + 32);
+}
+
+// degree conversion: celsius vs. fahrenheit
+function getMinMaxForecastTemps(unit, minTemp, maxTemp) {
+  if (unit === "fahrenheit") {
+    return `${getFahrenheit(minTemp)}°/${getFahrenheit(maxTemp)}°`;
+  } else {
+    return `${Math.round(minTemp)}°/${Math.round(maxTemp)}°`;
+  }
+}
+
+// changes temp from celsius to fahrenheit
+function convertToFahrenheit(event) {
+  event.preventDefault();
+  celsiusLink.classList.remove("active");
+  celsiusLink.classList.add("inactive");
+  fahrenheitLink.classList.add("active");
+  fahrenheitLink.classList.remove("inactive");
+  document.querySelector("#current-temp").innerHTML = getFahrenheit(
+    celsiusTemperature
+  );
+  let fahrenheitTempTodayMinMax = `${getFahrenheit(
+    celsiusTempTodayMin
+  )}°/${getFahrenheit(celsiusTempTodayMax)}°`;
+  document.querySelector("#today-temp").innerHTML = fahrenheitTempTodayMinMax;
+
+  setForecasts("fahrenheit");
+}
+
+// changes temp from fahrenheit to celsius
+function convertToCelsius(event) {
+  event.preventDefault();
+  celsiusLink.classList.add("active");
+  celsiusLink.classList.remove("inactive");
+  fahrenheitLink.classList.remove("active");
+  fahrenheitLink.classList.add("inactive");
+  document.querySelector("#current-temp").innerHTML = Math.round(
+    celsiusTemperature
+  );
+  document.querySelector(
+    "#today-temp"
+  ).innerHTML = `${celsiusTempTodayMin}°/${celsiusTempTodayMax}°`;
+
+  setForecasts("celsius");
+}
+
+// set 5 forecast days, with temperatures, weather icon + weekday
+function setForecasts(unit) {
+  forecastElement.innerHTML = null;
+
+  for (let index = 1; index <= 5; index++) {
+    forecast = forecastGlobal[index];
+    forecastElement.innerHTML += `
+    <div class="col text-center">
+      <div class="forecast-temp">${getMinMaxForecastTemps(
+        unit,
+        forecast.temp.min,
+        forecast.temp.max
+      )}</div>
+      <i class="forecast-icon fas ${getWeatherIconClass(
+        forecast.weather[0].icon
+      )}"> </i>
+      <div class="forecast-day">${formatDay(forecast.dt * 1000).substring(0, 3)}
+      </div>
+      </div>`;
+  }
+}
+
+// define forecastGlobal variable for setting the forecast for the next 5 days
+function showForecast(response) {
+  forecastGlobal = response.data.daily;
+  setForecasts("celsius");
+}
+
+// update song + description in the Spotify player widget
+function updatePlayer(code) {
+  let musicPlayerElement = document.querySelector("#music-player");
+  let textPlayerElement = document.querySelector("#text-player");
+
+  if (!(code in customWeatherData)) {
+    code = "default";
+  }
+  musicPlayerElement.setAttribute(
+    "src",
+    `https://open.spotify.com/embed/track/${customWeatherData[code].spotifyId}`
+  );
+  textPlayerElement.innerHTML = customWeatherData[code].trackDescription;
+}
+
+// get + show current weather data (city name, current temp, icon + min/max temp)
+function showToday(response) {
+  document.querySelector("#city").innerHTML = cityName;
+  celsiusTemperature = response.data.current.temp;
+
+  document.querySelector("#current-temp").innerHTML = Math.round(
+    celsiusTemperature
+  );
+
+  celsiusTempTodayMin = Math.round(response.data.daily[0].temp.min);
+  celsiusTempTodayMax = Math.round(response.data.daily[0].temp.max);
+  let celsiusTempTodayMinMax = `${celsiusTempTodayMin}°/${celsiusTempTodayMax}°`;
+  document.querySelector("#today-temp").innerHTML = celsiusTempTodayMinMax;
+
+  let currentTempIconElement = document.querySelector("#current-temp-icon");
+
+  let iconClass = getWeatherIconClass(response.data.current.weather[0].icon);
+  currentTempIconElement.setAttribute("class", `fas ${iconClass}`);
+  updatePlayer(response.data.current.weather[0].icon);
+
+  currentTempIconElement.setAttribute(
+    "alt",
+    response.data.current.weather[0].description
+  );
+
+  return response;
+}
+
+// get weather data from API
+function getWeatherData() {
+  let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=${units}&exclude=minutely,hourly`;
+  axios.get(`${apiUrl}&appid=${apiKey}`).then(showToday).then(showForecast);
+}
+
+// get location (city name, latitude + longitude)
+function getLocationInfo(response) {
+  cityName = response.data.name;
+  latitude = response.data.coord.lat;
+  longitude = response.data.coord.lon;
+  return response;
+}
+
+// get data from API (first: location; then: weather data for this location)
+function updateFromGeolocation(position) {
+  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=${units}`;
+  axios
+    .get(`${apiUrl}&appid=${apiKey}`)
+    .then(getLocationInfo)
+    .then(getWeatherData);
+}
+
+// when a user clicks the geolocation button (compass)
+function getGeolocation(event) {
+  event.preventDefault();
+  navigator.geolocation.getCurrentPosition(updateFromGeolocation);
+}
+
+// app start + user search
+function updateFromSearch(city) {
+  if (city) {
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}`;
+    axios
+      .get(`${apiUrl}&appid=${apiKey}`)
+      .then(getLocationInfo)
+      .then(getWeatherData);
+  } else {
+    alert("Please enter a city");
+  }
+}
+
+// process input from form
+function handleSubmit(event) {
+  event.preventDefault();
+  let city = document.querySelector("#city-input").value;
+  city = city.trim();
+  updateFromSearch(city);
+}
+
+// get current date + time
+function formatDate(timestamp) {
+  let date = new Date(timestamp);
+  let hours = date.getHours();
+  if (hours < 10) {
+    hours = `0${hours}`;
+  }
+  let minutes = date.getMinutes();
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+
+  return `${formatDay(timestamp)} ${hours}:${minutes}`;
+}
+
+function formatDay(timestamp) {
+  let date = new Date(timestamp);
+  let days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  let day = days[date.getDay()];
+  return day;
+}
+
+let now = new Date();
+document.querySelector("#date").innerHTML = formatDate(now);
+
+// variables + event listener for degree conversion
+let celsiusTemperature = null;
+let celsiusTempTodayMin = null;
+let celsiusTempTodayMax = null;
+
+let fahrenheitLink = document.querySelector("#fahrenheit");
+fahrenheitLink.addEventListener("click", convertToFahrenheit);
+
+let celsiusLink = document.querySelector("#celsius");
+celsiusLink.addEventListener("click", convertToCelsius);
+
+// weather object with icon class, Spotify song id + track description
 let customWeatherData = {
   "01d": {
     // clear sky, day
@@ -136,229 +357,6 @@ let customWeatherData = {
   },
 };
 
-// get the class of the weather icon, needed for dark mode
-function getWeatherIconClass(code) {
-  if (!(code in customWeatherData)) {
-    code = "default";
-  }
-  return customWeatherData[code].iconClass;
-}
-
-// degree conversion from celcius to fahrenheit
-function getFahrenheit(temp) {
-  return Math.round((temp * 9) / 5 + 32);
-}
-
-function getMinMaxForecastTemps(unit, minTemp, maxTemp) {
-  if (unit === "fahrenheit") {
-    return `${getFahrenheit(minTemp)}°/${getFahrenheit(maxTemp)}°`;
-  } else {
-    return `${Math.round(minTemp)}°/${Math.round(maxTemp)}°`;
-  }
-}
-
-// set 5 forecast days, with temperatures, weather icon and weekday
-function setForecasts(unit) {
-  forecastElement.innerHTML = null;
-
-  for (let index = 1; index <= 5; index++) {
-    forecast = forecastGlobal[index];
-    forecastElement.innerHTML += `
-    <div class="col text-center">
-      <div class="forecast-temp">${getMinMaxForecastTemps(
-        unit,
-        forecast.temp.min,
-        forecast.temp.max
-      )}</div>
-      <i class="forecast-icon fas ${getWeatherIconClass(
-        forecast.weather[0].icon
-      )}"> </i>
-      <div class="forecast-day">${formatDay(forecast.dt * 1000).substring(0, 3)}
-      </div>
-      </div>`;
-  }
-}
-
-function convertToFahrenheit(event) {
-  event.preventDefault();
-  celsiusLink.classList.remove("active");
-  celsiusLink.classList.add("inactive");
-  fahrenheitLink.classList.add("active");
-  fahrenheitLink.classList.remove("inactive");
-  document.querySelector("#current-temp").innerHTML = getFahrenheit(
-    celsiusTemperature
-  );
-  let fahrenheitTempTodayMinMax = `${getFahrenheit(
-    celsiusTempTodayMin
-  )}°/${getFahrenheit(celsiusTempTodayMax)}°`;
-  document.querySelector("#today-temp").innerHTML = fahrenheitTempTodayMinMax;
-
-  setForecasts("fahrenheit");
-}
-
-function convertToCelsius(event) {
-  event.preventDefault();
-  celsiusLink.classList.add("active");
-  celsiusLink.classList.remove("inactive");
-  fahrenheitLink.classList.remove("active");
-  fahrenheitLink.classList.add("inactive");
-  document.querySelector("#current-temp").innerHTML = Math.round(
-    celsiusTemperature
-  );
-  document.querySelector(
-    "#today-temp"
-  ).innerHTML = `${celsiusTempTodayMin}°/${celsiusTempTodayMax}°`;
-
-  setForecasts("celsius");
-}
-
-function showForecast(response) {
-  forecastGlobal = response.data.daily;
-  setForecasts("celsius");
-}
-
-// update song & description in the Spotify player widget
-function updatePlayer(code) {
-  let musicPlayerElement = document.querySelector("#music-player");
-  let textPlayerElement = document.querySelector("#text-player");
-
-  if (!(code in customWeatherData)) {
-    code = "default";
-  }
-  musicPlayerElement.setAttribute(
-    "src",
-    `https://open.spotify.com/embed/track/${customWeatherData[code].spotifyId}`
-  );
-  textPlayerElement.innerHTML = customWeatherData[code].trackDescription;
-}
-
-// get date & time
-function formatDate(timestamp) {
-  let date = new Date(timestamp);
-  let hours = date.getHours();
-  if (hours < 10) {
-    hours = `0${hours}`;
-  }
-  let minutes = date.getMinutes();
-  if (minutes < 10) {
-    minutes = `0${minutes}`;
-  }
-
-  return `${formatDay(timestamp)} ${hours}:${minutes}`;
-}
-
-function formatDay(timestamp) {
-  let date = new Date(timestamp);
-  let days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  let day = days[date.getDay()];
-  return day;
-}
-
-function showToday(response) {
-  document.querySelector("#city").innerHTML = cityName;
-  celsiusTemperature = response.data.current.temp;
-
-  document.querySelector("#current-temp").innerHTML = Math.round(
-    celsiusTemperature
-  );
-
-  celsiusTempTodayMin = Math.round(response.data.daily[0].temp.min);
-  celsiusTempTodayMax = Math.round(response.data.daily[0].temp.max);
-  let celsiusTempTodayMinMax = `${celsiusTempTodayMin}°/${celsiusTempTodayMax}°`;
-  document.querySelector("#today-temp").innerHTML = celsiusTempTodayMinMax;
-
-  let nowIconElement = document.querySelector("#now-icon");
-
-  let iconClass = getWeatherIconClass(response.data.current.weather[0].icon);
-  nowIconElement.setAttribute("class", `fas ${iconClass}`);
-  updatePlayer(response.data.current.weather[0].icon);
-
-  nowIconElement.setAttribute(
-    "alt",
-    response.data.current.weather[0].description
-  );
-
-  return response;
-}
-
-function getLocationInfo(response) {
-  cityName = response.data.name;
-  latitude = response.data.coord.lat;
-  longitude = response.data.coord.lon;
-  return response;
-}
-
-// process input from form
-function handleSubmit(event) {
-  event.preventDefault();
-  let city = document.querySelector("#city-input").value;
-  city = city.trim();
-  updateFromSearch(city);
-}
-
-function getWeatherData() {
-  let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=${units}&exclude=minutely,hourly`;
-  axios.get(`${apiUrl}&appid=${apiKey}`).then(showToday).then(showForecast);
-}
-
-function updateFromGeolocation(position) {
-  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=${units}`;
-  axios
-    .get(`${apiUrl}&appid=${apiKey}`)
-    .then(getLocationInfo)
-    .then(getWeatherData);
-}
-
-// when a user clicks the geolocation button (compass)
-function getGeolocation(event) {
-  event.preventDefault();
-  navigator.geolocation.getCurrentPosition(updateFromGeolocation);
-}
-
-// app start & user search
-function updateFromSearch(city) {
-  if (city) {
-    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}`;
-    axios
-      .get(`${apiUrl}&appid=${apiKey}`)
-      .then(getLocationInfo)
-      .then(getWeatherData);
-  } else {
-    alert("Please enter a city");
-  }
-}
-
-// date & time
-let now = new Date();
-document.querySelector("#date").innerHTML = formatDate(now);
-
-// celsius & fahrenheit
-let celsiusTemperature = null;
-let celsiusTempTodayMin = null;
-let celsiusTempTodayMax = null;
-
-let fahrenheitLink = document.querySelector("#fahrenheit");
-fahrenheitLink.addEventListener("click", convertToFahrenheit);
-
-let celsiusLink = document.querySelector("#celsius");
-celsiusLink.addEventListener("click", convertToCelsius);
-
-// search event listener
-document.querySelector("#search-form").addEventListener("submit", handleSubmit);
-
-// get geolocation
-document
-  .querySelector("#locate-button")
-  .addEventListener("click", getGeolocation);
-
 // global variables
 let cityName = null;
 let latitude = null;
@@ -367,6 +365,14 @@ let units = "metric";
 let apiKey = "e5551b43cbca96dceabb04d6c75c6371";
 let forecastGlobal = null;
 let forecastElement = document.querySelector("#forecast");
+
+// search event listener
+document.querySelector("#search-form").addEventListener("submit", handleSubmit);
+
+// get geolocation
+document
+  .querySelector("#locate-button")
+  .addEventListener("click", getGeolocation);
 
 // city for app start
 updateFromSearch("Munich");
