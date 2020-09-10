@@ -134,6 +134,9 @@ body {
   font-weight: 600;
   font-family: "Montserrat Subrayada", sans-serif;
   margin-bottom: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 @media (min-width: 576px) {
